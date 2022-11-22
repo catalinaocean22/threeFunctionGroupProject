@@ -1,5 +1,5 @@
 import unittest
-from task import conv_num, my_datetime, conv_endian
+from task import conv_num
 
 
 class TestConvNum(unittest.TestCase):
