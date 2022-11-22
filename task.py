@@ -16,6 +16,8 @@ def conv_num(num_str):
 
     if re.fullmatch(float_regex, num_str):
         return float(num_str)
+    
+    return None
 
 
 def my_datetime(num_sec):
