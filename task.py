@@ -12,12 +12,15 @@ def conv_num(num_str):
     hex_regex = r"^-?(0x|0X)+[0-9a-fA-F]+$"
     if re.fullmatch(hex_regex, num_str):
         return_val = 0
-        negative = False
-        if num_str[0] == '-':
-            negative = True
-            num_str = num_str[1:]
-        num_str = num_str[2:].upper()
         exponent = 0
+        positive = True
+        # Check if the number as negative, and remove the symbol if so
+        if num_str[0] == '-':
+            positive = False
+            num_str = num_str[1:]
+
+        # Remove the hex prefix and uppercase the string for case insensitivity
+        num_str = num_str[2:].upper()
         hex_dict = {'0': 0,
                     '1': 1,
                     '2': 2,
@@ -35,12 +38,15 @@ def conv_num(num_str):
                     'E': 14,
                     'F': 15
                     }
+
+        # Iterate through the num_str backwards, increasing the exponent each time
         for hex in reversed(num_str):
             return_val = return_val + (hex_dict[hex] * 16 ** exponent)
             exponent += 1
-        if negative:
-            return_val *= -1
-        return return_val
+        if positive:
+            return return_val
+        else:
+            return return_val * -1
 
     int_regex = r"^-?[0-9]+$"
     float_regex = r"^-?[0-9]+\.[0-9]+"
