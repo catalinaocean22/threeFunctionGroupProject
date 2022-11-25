@@ -1,5 +1,41 @@
 import re
 
+# dictionaries for conversions
+char_to_digit = { '0': 0,
+                  '1': 1,
+                  '2': 2,
+                  '3': 3,
+                  '4': 4,
+                  '5': 5,
+                  '6': 6,
+                  '7': 7,
+                  '8': 8,
+                  '9': 9,
+                  'A': 10,
+                  'B': 11,
+                  'C': 12,
+                  'D': 13,
+                  'E': 14,
+                  'F': 15
+                }
+
+digit_to_char = {  0:  '0',
+                   1:  '1',
+                   2:  '2',
+                   3:  '3',
+                   4:  '4',
+                   5:  '5',
+                   6:  '6',
+                   7:  '7',
+                   8:  '8',
+                   9:  '9',
+                   10: 'A',
+                   11: 'B',
+                   12: 'C',
+                   13: 'D',
+                   14: 'E',
+                   15: 'F'
+                }
 
 def conv_num(num_str):
 
@@ -8,25 +44,9 @@ def conv_num(num_str):
     if type(num_str) != str or len(num_str) == 0 or multiple_decimals:
         return None
 
-    # Dict to convert the string values to their numeric values
-    hex_dict = {'0': 0,
-                '1': 1,
-                '2': 2,
-                '3': 3,
-                '4': 4,
-                '5': 5,
-                '6': 6,
-                '7': 7,
-                '8': 8,
-                '9': 9,
-                'A': 10,
-                'B': 11,
-                'C': 12,
-                'D': 13,
-                'E': 14,
-                'F': 15
-                }
 
+
+    # Dict to convert the string values to their numeric values
     # Use this to check if num_string is valid hex
     hex_regex = r"^-?(0x|0X)+[0-9a-fA-F]+$"
     if re.fullmatch(hex_regex, num_str):
@@ -43,7 +63,7 @@ def conv_num(num_str):
 
         # Iterate through the num_str backwards, increasing the exponent each time
         for hex in reversed(num_str):
-            return_val = return_val + (hex_dict[hex] * 16 ** exponent)
+            return_val = return_val + (char_to_digit[hex] * 16 ** exponent)
             exponent += 1
         if positive:
             return return_val
@@ -69,7 +89,7 @@ def conv_num(num_str):
                 return_val = return_val / 10 ** exponent
                 exponent = 0
                 continue
-            return_val = return_val + (hex_dict[num]) * 10 ** exponent
+            return_val = return_val + (char_to_digit[num]) * 10 ** exponent
             exponent += 1
         if positive:
             return return_val
@@ -81,6 +101,30 @@ def conv_num(num_str):
 def my_datetime(num_sec):
     pass
 
-
 def conv_endian(num, endian='big'):
-    pass
+    # validate
+    if endian != 'big' and endian != 'little':
+        return None
+    is_negative = num < 0
+    num = abs(num)
+    
+    # calculate remainders
+    remainders = []
+    while num > 0:
+        remainders.append(num%16)
+        num //= 16
+    if len(remainders) % 2 == 1:
+        remainders.append(0)
+
+    # build byte_strings
+    byte_strings = []
+    while remainders:
+        byte_strings.append("".join( [digit_to_char[remainders.pop()], digit_to_char[remainders.pop()]] ) )
+    if endian == 'little':
+        byte_strings.reverse()
+
+    # build result
+    result = " ".join(byte_strings)
+    if is_negative:
+        result = "-" + result
+    return result

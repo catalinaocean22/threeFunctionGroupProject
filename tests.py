@@ -1,5 +1,7 @@
 import unittest
 from task import conv_num
+from task import my_datetime
+from task import conv_endian
 from random import randint
 
 class TestConvNum(unittest.TestCase):
@@ -83,3 +85,4 @@ class test_my_datetime(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+ 
