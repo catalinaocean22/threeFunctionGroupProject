@@ -98,8 +98,10 @@ def conv_num(num_str):
     return None
 
 
+
 def my_datetime(num_sec):
     pass
+
 
 def conv_endian(num, endian='big'):
     # validate
