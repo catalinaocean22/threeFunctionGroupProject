@@ -3,14 +3,14 @@ import random
 from task import conv_num
 
 
-def build_num_convs_tests(expected, test_case, func_under_test, message):
+def build_almost_equal_tests(expected, test_case, func_under_test, message):
     def test(self):
         result = func_under_test(test_case)
         self.assertAlmostEqual(expected, result, 5, message.format(test_case, expected, result))
     return test
 
 
-def build_hex_convs_tests(expected, test_case, func_under_test, message):
+def build_equal_tests(expected, test_case, func_under_test, message):
     def test(self):
         result = func_under_test(test_case)
         self.assertEqual(expected, result, message.format(test_case, expected, result))
@@ -61,7 +61,7 @@ class TestConvNum(unittest.TestCase):
 
             # Generate tests
             message = 'Test case: {}, Expected: {}, Result: {}'
-            new_test = build_num_convs_tests(test_num, str(test_num), conv_num, message)
+            new_test = build_almost_equal_tests(test_num, str(test_num), conv_num, message)
             setattr(unittest.TestCase, 'test_{}'.format(test_num), new_test)
 
     def random_hex_testing(self, tests_to_generate=10000):
@@ -76,7 +76,7 @@ class TestConvNum(unittest.TestCase):
 
             # Generate tests
             message = 'Test case: {}, Expected: {}, Result: {}'
-            new_test = build_hex_convs_tests(test_int, test_hex, conv_num, message)
+            new_test = build_equal_tests(test_int, test_hex, conv_num, message)
             setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
 
 
