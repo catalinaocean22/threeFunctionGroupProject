@@ -4,6 +4,7 @@ from task import my_datetime
 from task import conv_endian
 from random import randint
 
+
 class TestConvNum(unittest.TestCase):
     # simple tests?
     # todo - required? useful?
@@ -16,7 +17,7 @@ class TestConvNum(unittest.TestCase):
     def test_simple_2(self):
         self.assertEqual(conv_num('-1'), -1)
 
-    # invalid input 
+    # invalid input
     # todo
 
     # provided example tests
@@ -68,6 +69,7 @@ class TestConvNum(unittest.TestCase):
         rand_hex = hex(test_int)
         self.assertEqual(conv_num(rand_hex), test_int)
 
+
 class TestMyDateTime(unittest.TestCase):
     # provided example tests
     def test_example_0(self):
@@ -81,6 +83,7 @@ class TestMyDateTime(unittest.TestCase):
 
     def test_example_3(self):
         self.assertEqual(my_datetime(201653971200), '02-29-8360')
+
 
 class TestConvEndian(unittest.TestCase):
     # provided example tests
@@ -100,11 +103,12 @@ class TestConvEndian(unittest.TestCase):
         self.assertEqual(conv_endian(-954786, 'little'), '-A2 91 0E')
 
     def test_example_5(self):
-        self.assertEqual(conv_endian(num=-954786, endian='little'), '-A2 91 0E')
+        self.assertEqual(conv_endian(num=-954786, endian='little'),
+                         '-A2 91 0E')
 
     def test_example_6(self):
         self.assertEqual(conv_endian(num=-954786, endian='small'), None)
 
+
 if __name__ == '__main__':
     unittest.main()
- 

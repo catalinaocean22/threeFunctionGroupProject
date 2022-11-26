@@ -39,7 +39,8 @@ digit_to_char = {0: '0',
 
 
 def conv_num(num_str):
-    # If the input is not a string, is an empty string, or contains multiple '.' characters, return None
+    # If the input is not a string, is an empty string,
+    # or contains multiple '.' characters, return None
     multiple_decimals = re.match(r"\.+.*\.+", num_str)
     if type(num_str) != str or len(num_str) == 0 or multiple_decimals:
         return None
@@ -58,7 +59,8 @@ def conv_num(num_str):
         # Remove the hex prefix and uppercase the string for case insensitivity
         num_str = num_str[2:].upper()
 
-        # Iterate through the num_str backwards, increasing the exponent each time
+        # Iterate through the num_str backwards,
+        # increasing the exponent each time
         for hex_str in reversed(num_str):
             return_val = return_val + (char_to_digit[hex_str] * 16 ** exponent)
             exponent += 1
@@ -80,7 +82,8 @@ def conv_num(num_str):
             positive = False
             num_str = num_str[1:]
 
-        # Iterate through the num_str backwards, increasing the exponent each time
+        # Iterate through the num_str backwards,
+        # increasing the exponent each time
         for num in reversed(num_str):
             if num == '.':
                 return_val = return_val / 10 ** exponent
@@ -118,7 +121,8 @@ def conv_endian(num, endian='big'):
     # build byte_strings
     byte_strings = []
     while remainders:
-        byte_strings.append("".join([digit_to_char[remainders.pop()], digit_to_char[remainders.pop()]]))
+        byte_strings.append("".join([digit_to_char[remainders.pop()],
+                                     digit_to_char[remainders.pop()]]))
     if endian == 'little':
         byte_strings.reverse()
 
