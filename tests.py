@@ -37,13 +37,13 @@ class TestConvNum(unittest.TestCase):
         self.assertEqual(conv_num('0xAD4'), 2772)
 
     def test_example_6(self):
-        self.assertEqual(conv_num('0xAZ4'), None)
+        self.assertIsNone(conv_num('0xAZ4'))
 
     def test_example_7(self):
-        self.assertEqual(conv_num('12345A'), None)
+        self.assertIsNone(conv_num('12345A'))
 
     def test_example_8(self):
-        self.assertEqual(conv_num('12.3.45'), None)
+        self.assertIsNone(conv_num('12.3.45'))
 
     # zeroes at ends tests - leading and trailing
     def test_zeroes_at_ends_1(self):
@@ -107,7 +107,7 @@ class TestConvEndian(unittest.TestCase):
                          '-A2 91 0E')
 
     def test_example_6(self):
-        self.assertEqual(conv_endian(num=-954786, endian='small'), None)
+        self.assertIsNone(conv_endian(num=-954786, endian='small'))
 
 
 if __name__ == '__main__':
