@@ -1,6 +1,26 @@
 import unittest
+import random
 from task import conv_num
-from random import randint
+
+
+def build_num_convs_tests(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertAlmostEqual(expected, result, 5, message.format(test_case, expected, result))
+    return test
+
+
+def build_hex_convs_tests(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertEqual(expected, result, message.format(test_case, expected, result))
+    return test
+
+
+def build_outlier_convs_tests(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertEqual(expected, result, message.format(test_case, expected, result))
 
 
 class TestConvNum(unittest.TestCase):
@@ -31,16 +51,36 @@ class TestConvNum(unittest.TestCase):
     def test_example_8(self):
         self.assertIsNone(conv_num('12.3.45'))
 
-    def test_random_hex(self):
-        test_int = randint(0, 1000000000)
-        rand_hex = hex(test_int)
-        self.assertEqual(conv_num(rand_hex), test_int)
+    def random_int_float_testing(self, tests_to_generate=10000):
+        for i in range(tests_to_generate):
+            # Generate random integers and floats
+            test_num = round(random.uniform(-1000000000, 1000000000), random.randint(0, 50))
+            odds = random.randint(0, 1)
+            if odds == 1:
+                test_num = round(test_num)
 
-    def test_random_negative_hex(self):
-        test_int = randint(0, 1000000000)
-        rand_hex = '-' + hex(test_int)
-        self.assertEqual(conv_num(rand_hex), test_int * -1)
+            # Generate tests
+            message = 'Test case: {}, Expected: {}, Result: {}'
+            new_test = build_num_convs_tests(test_num, str(test_num), conv_num, message)
+            setattr(unittest.TestCase, 'test_{}'.format(test_num), new_test)
+
+    def random_hex_testing(self, tests_to_generate=10000):
+        # Generate random hexes
+        for i in range(tests_to_generate):
+            test_int = random.randint(0, 1000000000)
+            test_hex = hex(test_int)
+            odds = random.randint(0, 1)
+            if odds == 1:
+                test_hex = '-' + test_hex
+                test_int *= -1
+
+            # Generate tests
+            message = 'Test case: {}, Expected: {}, Result: {}'
+            new_test = build_hex_convs_tests(test_int, test_hex, conv_num, message)
+            setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
 
 
 if __name__ == '__main__':
+    TestConvNum.random_int_float_testing(TestConvNum())
+    TestConvNum.random_hex_testing(TestConvNum())
     unittest.main()
