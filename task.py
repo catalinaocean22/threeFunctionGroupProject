@@ -25,9 +25,11 @@ def conv_num_sign_handler(is_positive, return_val):
 
 def conv_num(num_str):
 
-    # If the input is not a string, is an empty string, or contains multiple '.' characters, return None
+    # If the input is not a string, is an empty string, contains multiple '.' characters,
+    # or is an otherwise unacceptable string return None
+    invalid_strings = ['-', '.', ' ']
     multiple_decimals = re.match(r"\.+.*\.+", num_str)
-    if type(num_str) != str or len(num_str) == 0 or multiple_decimals:
+    if type(num_str) != str or len(num_str) == 0 or num_str in invalid_strings or multiple_decimals:
         return None
 
     # Use this to check if num_string is valid hex

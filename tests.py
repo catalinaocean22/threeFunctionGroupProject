@@ -17,39 +17,50 @@ def build_equal_tests(expected, test_case, func_under_test, message):
     return test
 
 
-def build_outlier_convs_tests(expected, test_case, func_under_test, message):
+def build_none_tests(test_case, func_under_test, message):
     def test(self):
         result = func_under_test(test_case)
-        self.assertEqual(expected, result, message.format(test_case, expected, result))
+        self.assertIsNone(result, message.format(test_case, None, result))
+    return test
 
 
 class TestConvNum(unittest.TestCase):
 
-    def test_example_1(self):
-        self.assertEqual(conv_num('12345'), 12345)
+    def hardcoded_tests(self):
 
-    def test_example_2(self):
-        self.assertEqual(conv_num('-123.45'), -123.45)
-
-    def test_example_3(self):
-        self.assertTrue(True)
-        # self.assertEqual(conv_num('.45'), 0.45)
-
-    def test_example_4(self):
-        # self.assertEqual(conv_num('123.'), 123.0)
-        self.assertTrue(True)
-
-    def test_example_5(self):
-        self.assertEqual(conv_num('0xAD4'), 2772)
-
-    def test_example_6(self):
-        self.assertIsNone(conv_num('0xAZ4'))
-
-    def test_example_7(self):
-        self.assertIsNone(conv_num('12345A'))
-
-    def test_example_8(self):
-        self.assertIsNone(conv_num('12.3.45'))
+        # A hardcoded list of tests from assignment description, edge-cases, and Ed questions
+        test_dict = {
+            '12345': 12345,
+            '-123.45': -123.45,
+            '.45': 0.45,
+            '123.': 123.0,
+            '0xAD4': 2772,
+            '0xAZ4': None,
+            '12345A': None,
+            '12.3.45': None,
+            '-': None,
+            '.': None,
+            '0': 0,
+            '0.': 0.0,
+            '.0': 0.0,
+            '0.0': 0.0,
+            '-0': 0,
+            '0x': None,
+            '0x0000000': 0,
+            '0001234': 1234,
+            '000.1234': 0.1234,
+            '+1234': None,
+            '-0000123.45': -123.45
+        }
+        message = 'Test case: {}, Expected: {}, Result: {}'
+        for key in test_dict.keys():
+            if test_dict[key] is None:
+                new_test = build_none_tests(key, conv_num, message)
+            elif isinstance(test_dict[key], int):
+                new_test = build_equal_tests(test_dict[key], key, conv_num, message)
+            else:
+                new_test = build_almost_equal_tests(test_dict[key], key, conv_num, message)
+            setattr(unittest.TestCase, 'test{}'.format(key), new_test)
 
     def random_int_float_testing(self, tests_to_generate=10000):
         for i in range(tests_to_generate):
@@ -81,6 +92,7 @@ class TestConvNum(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    TestConvNum.hardcoded_tests(TestConvNum())
     TestConvNum.random_int_float_testing(TestConvNum())
     TestConvNum.random_hex_testing(TestConvNum())
     unittest.main()
