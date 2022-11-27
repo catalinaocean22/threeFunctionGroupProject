@@ -1,6 +1,7 @@
 import unittest
 import random
 from task import conv_num, my_datetime, conv_endian
+from datetime import datetime
 
 
 def build_almost_equal_tests(expected, test_case, func_under_test, message):
@@ -112,6 +113,18 @@ class TestMyDateTime(unittest.TestCase):
 
     def test_example_3(self):
         self.assertEqual(my_datetime(201653971200), '02-29-8360')
+    
+    # random tests from 0 up to the big example
+    def test_random(self):
+        def my_date(seconds):
+            return datetime.utcfromtimestamp(seconds)
+        def string_time(a_date):
+            d = a_date.strftime("%m-%d-%Y")
+            return d
+        tests_to_generate = 100000
+        for i in range(tests_to_generate):
+            sec = random.randint(0, 201654057600)
+            self.assertEqual(my_datetime(sec), string_time(my_date(sec)))
 
 
 class TestConvEndian(unittest.TestCase):
