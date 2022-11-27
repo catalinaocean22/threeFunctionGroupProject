@@ -111,9 +111,105 @@ def conv_decimal(num_str):
 
 
 def my_datetime(num_sec):
-    pass
+    sec_day = 86400
+    year = 1970
+    month = 1
+    date = 1
+    reg_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    leap_days_in_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    days = num_sec//sec_day
+    days_leap = 366
+    days_reg = 365
+    day_sum_before_1972 = days_reg * 2
+
+    # Before 1972
+    if days < day_sum_before_1972:
+        year = 1970 + (days//365)
+        remaining_days = days - day_sum_before_1972
+        month = get_data(num_sec, remaining_days, reg_days_in_month)[0]
+        date = get_data(num_sec, remaining_days, reg_days_in_month)[1]
+
+    # 1972
+    if day_sum_before_1972 <= days < day_sum_before_1972 + days_leap:
+        year = 1972
+        remaining_days = days - day_sum_before_1972
+        month = get_data(num_sec, remaining_days, leap_days_in_month)[0]
+        date = get_data(num_sec, remaining_days, leap_days_in_month)[1]
+
+    # after 1972
+    if days >= day_sum_before_1972 + days_leap:
+        year = 1972
+        remain_days = days - (day_sum_before_1972 + days_leap)
+        while remain_days >= days_leap:
+            remain_days -= days_reg
+            year += 1
+            if is_leap(year):
+                remain_days -= days_leap
+                year += 1
+        if remain_days >= 0:
+            year += 1
+
+        if is_leap(year):
+            month = get_data(num_sec, remain_days, leap_days_in_month)[0]
+            date = get_data(num_sec, remain_days, leap_days_in_month)[1]
+
+        if not is_leap(year):
+            month = get_data(num_sec, remain_days, reg_days_in_month)[0]
+            date = get_data(num_sec, remain_days, reg_days_in_month)[1]
+
+    if month < 10:
+        month = str(0) + str(month)
+    if date < 10:
+        date = str(0) + str(date)
+    return str(month) + "-" + str(date) + "-" + str(year)
+
+# this is the function to be used to replace the repeated code above
 
 
+def get_data(num_sec, days_needed, month_list):
+    """Helper function to get the month and date"""
+    sec_day = 86400
+    month = 1
+    date = 1
+    total_days = month_list[0]
+    days = num_sec // sec_day
+    i = 0
+    while i <= len(month_list) - 1:
+        if days_needed % 365 > total_days:
+            date = (days_needed % 365 - total_days)
+            month += 1
+            total_days += month_list[i + 1]
+            i += 1
+        elif month_list[i - 1] < days_needed % 365 < total_days:
+
+            date = days_needed % 365 - (total_days - month_list[i]) + 1
+            break
+        elif days_needed % 365 < total_days:
+            date = days_needed % 365 + 1
+            break
+
+        elif days_needed % 365 == total_days:
+            if num_sec >= days * sec_day:
+                date = 1
+                month += 1
+            break
+
+        elif days_needed % 365 == 0:
+            date = 1
+            break
+        else:
+            break
+
+    if num_sec == 0:
+        date = 1
+
+    return [month, date]
+
+
+def is_leap(year):
+    return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+
+  
 def conv_endian(num, endian='big'):
     # validate
     if endian not in ['big', 'little']:
