@@ -183,7 +183,7 @@ def my_datetime(num_sec):
     # after 1972
     if days >= day_sum_before_1972 + days_leap:
         year = 1972
-        remain_days = days - (day_sum_before_1972 + days_leap)          
+        remain_days = days - (day_sum_before_1972 + days_leap)
         new_days_year = get_year(remain_days, year, days_reg, days_leap)
         remain_days = new_days_year[0]
         year = new_days_year[1]
