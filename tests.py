@@ -1,6 +1,6 @@
 import unittest
 import random
-from task import conv_num
+from task import conv_num, my_datetime, conv_endian
 
 
 def build_almost_equal_tests(expected, test_case, func_under_test, message):
@@ -45,12 +45,20 @@ class TestConvNum(unittest.TestCase):
             '.0': 0.0,
             '0.0': 0.0,
             '-0': 0,
+            '1': 1,
+            '-1': -1,
+            '1.0': 1.0,
+            '-1.0': -1.0,
             '0x': None,
             '0x0000000': 0,
             '0001234': 1234,
             '000.1234': 0.1234,
             '+1234': None,
-            '-0000123.45': -123.45
+            '-0000123.45': -123.45,
+            '0001': 1,
+            '0001000': 1000,
+            '0.0001': 0.0001,
+            '0.0001000': 0.0001
         }
         message = 'Test case: {}, Expected: {}, Result: {}'
         for key in test_dict.keys():
@@ -89,6 +97,46 @@ class TestConvNum(unittest.TestCase):
             message = 'Test case: {}, Expected: {}, Result: {}'
             new_test = build_equal_tests(test_int, test_hex, conv_num, message)
             setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
+
+
+class TestMyDateTime(unittest.TestCase):
+    # provided example tests
+    def test_example_0(self):
+        self.assertEqual(my_datetime(0), '01-01-1970')
+
+    def test_example_1(self):
+        self.assertEqual(my_datetime(123456789), '11-29-1973')
+
+    def test_example_2(self):
+        self.assertEqual(my_datetime(9876543210), '12-22-2282')
+
+    def test_example_3(self):
+        self.assertEqual(my_datetime(201653971200), '02-29-8360')
+
+
+class TestConvEndian(unittest.TestCase):
+    # provided example tests
+    def test_example_0(self):
+        self.assertEqual(conv_endian(954786, 'big'), '0E 91 A2')
+
+    def test_example_1(self):
+        self.assertEqual(conv_endian(954786), '0E 91 A2')
+
+    def test_example_2(self):
+        self.assertEqual(conv_endian(-954786), '-0E 91 A2')
+
+    def test_example_3(self):
+        self.assertEqual(conv_endian(954786, 'little'), 'A2 91 0E')
+
+    def test_example_4(self):
+        self.assertEqual(conv_endian(-954786, 'little'), '-A2 91 0E')
+
+    def test_example_5(self):
+        self.assertEqual(conv_endian(num=-954786, endian='little'),
+                         '-A2 91 0E')
+
+    def test_example_6(self):
+        self.assertIsNone(conv_endian(num=-954786, endian='small'))
 
 
 if __name__ == '__main__':
