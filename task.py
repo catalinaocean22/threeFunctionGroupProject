@@ -1,7 +1,7 @@
 import re
 
 # dictionaries for conversions
-char_to_digit = {'0': 0,
+CHAR_TO_DIGIT = {'0': 0,
                  '1': 1,
                  '2': 2,
                  '3': 3,
@@ -19,7 +19,7 @@ char_to_digit = {'0': 0,
                  'F': 15
                  }
 
-digit_to_char = {0: '0',
+DIGIT_TO_CHAR = {0: '0',
                  1: '1',
                  2: '2',
                  3: '3',
@@ -38,13 +38,41 @@ digit_to_char = {0: '0',
                  }
 
 
+def conv_num_sign_handler(is_positive, return_val):
+    return return_val if is_positive else return_val * -1
+
+
 def conv_num(num_str):
-    # If the input is not a string, is an empty string,
-    # or contains multiple '.' characters, return None
+
+    # If the input is not a string, is an empty string, contains multiple '.' characters,
+    # or is an otherwise unacceptable string return None
+    invalid_strings = ['-', '.', ' ']
     multiple_decimals = re.match(r"\.+.*\.+", num_str)
-    if type(num_str) != str or len(num_str) == 0 or multiple_decimals:
+    if type(num_str) != str or len(num_str) == 0 or num_str in invalid_strings or multiple_decimals:
         return None
 
+    # Use this to check if num_string is valid hex
+    hex_regex = r"^-?(0x|0X)+[0-9a-fA-F]+$"
+    if re.fullmatch(hex_regex, num_str):
+        return_val = 0
+        exponent = 0
+        is_positive = True
+        # Check if the number as negative, and remove the symbol if so
+        if num_str[0] == '-':
+            is_positive = False
+            num_str = num_str[1:]
+
+        # Remove the hex prefix and uppercase the string for case insensitivity
+        num_str = num_str[2:].upper()
+
+        # Iterate through the num_str backwards, increasing the exponent each time
+        for hex in reversed(num_str):
+            return_val = return_val + (CHAR_TO_DIGIT[hex] * 16 ** exponent)
+            exponent += 1
+        return conv_num_sign_handler(is_positive, return_val)
+
+    # Use this to check if num_str is a valid number
+    num_regex = r"^-?[0-9]*\.?[0-9]*$"
     # check if hex
     hex_regex = r"^-?(0x|0X)+[0-9a-fA-F]+$"
     if re.fullmatch(hex_regex, num_str):
@@ -53,8 +81,24 @@ def conv_num(num_str):
     # check if decimal
     num_regex = r"^-?[0-9]*\.?[0-9]*$"
     if re.fullmatch(num_regex, num_str):
-        return conv_decimal(num_str)
+        return_val = 0
+        exponent = 0
+        is_positive = True
 
+        # Check if the number as negative, and remove the symbol if so
+        if num_str[0] == '-':
+            is_positive = False
+            num_str = num_str[1:]
+
+        # Iterate through the num_str backwards, increasing the exponent each time
+        for num in reversed(num_str):
+            if num == '.':
+                return_val = return_val / 10 ** exponent
+                exponent = 0
+                continue
+            return_val = return_val + (CHAR_TO_DIGIT[num]) * 10 ** exponent
+            exponent += 1
+        return conv_num_sign_handler(is_positive, return_val)
     # invalid input
     return None
 
@@ -76,7 +120,7 @@ def conv_hex(num_str):
     # Iterate through the num_str backwards,
     # increasing the exponent each time
     for hex_str in reversed(num_str):
-        return_val = return_val + (char_to_digit[hex_str] * 16 ** exponent)
+        return_val = return_val + (CHAR_TO_DIGIT[hex_str] * 16 ** exponent)
         exponent += 1
     if positive:
         return return_val
@@ -102,7 +146,7 @@ def conv_decimal(num_str):
             return_val = return_val / 10 ** exponent
             exponent = 0
             continue
-        return_val = return_val + (char_to_digit[num]) * 10 ** exponent
+        return_val = return_val + (CHAR_TO_DIGIT[num]) * 10 ** exponent
         exponent += 1
     if positive:
         return return_val
@@ -133,8 +177,8 @@ def conv_endian(num, endian='big'):
     # build byte_strings
     byte_strings = []
     while remainders:
-        byte_strings.append("".join([digit_to_char[remainders.pop()],
-                                     digit_to_char[remainders.pop()]]))
+        byte_strings.append("".join([DIGIT_TO_CHAR[remainders.pop()],
+                                     DIGIT_TO_CHAR[remainders.pop()]]))
     if endian == 'little':
         byte_strings.reverse()
 

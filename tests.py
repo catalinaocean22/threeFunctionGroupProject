@@ -1,73 +1,102 @@
 import unittest
-from task import conv_num
-from task import my_datetime
-from task import conv_endian
-from random import randint
+import random
+from task import conv_num, my_datetime, conv_endian
+
+
+def build_almost_equal_tests(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertAlmostEqual(expected, result, 5, message.format(test_case, expected, result))
+    return test
+
+
+def build_equal_tests(expected, test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertEqual(expected, result, message.format(test_case, expected, result))
+    return test
+
+
+def build_none_tests(test_case, func_under_test, message):
+    def test(self):
+        result = func_under_test(test_case)
+        self.assertIsNone(result, message.format(test_case, None, result))
+    return test
 
 
 class TestConvNum(unittest.TestCase):
-    # simple tests?
-    # todo - required? useful?
-    def test_simple_0(self):
-        self.assertEqual(conv_num('0'), 0)
 
-    def test_simple_1(self):
-        self.assertEqual(conv_num('1'), 1)
+    def hardcoded_tests(self):
 
-    def test_simple_2(self):
-        self.assertEqual(conv_num('-1'), -1)
+        # A hardcoded list of tests from assignment description, edge-cases, and Ed questions
+        test_dict = {
+            '12345': 12345,
+            '-123.45': -123.45,
+            '.45': 0.45,
+            '123.': 123.0,
+            '0xAD4': 2772,
+            '0xAZ4': None,
+            '12345A': None,
+            '12.3.45': None,
+            '-': None,
+            '.': None,
+            '0': 0,
+            '0.': 0.0,
+            '.0': 0.0,
+            '0.0': 0.0,
+            '-0': 0,
+            '1': 1,
+            '-1': -1,
+            '1.0': 1.0,
+            '-1.0': -1.0,
+            '0x': None,
+            '0x0000000': 0,
+            '0001234': 1234,
+            '000.1234': 0.1234,
+            '+1234': None,
+            '-0000123.45': -123.45,
+            '0001': 1,
+            '0001000': 1000,
+            '0.0001': 0.0001,
+            '0.0001000': 0.0001
+        }
+        message = 'Test case: {}, Expected: {}, Result: {}'
+        for key in test_dict.keys():
+            if test_dict[key] is None:
+                new_test = build_none_tests(key, conv_num, message)
+            elif isinstance(test_dict[key], int):
+                new_test = build_equal_tests(test_dict[key], key, conv_num, message)
+            else:
+                new_test = build_almost_equal_tests(test_dict[key], key, conv_num, message)
+            setattr(unittest.TestCase, 'test{}'.format(key), new_test)
 
-    # invalid input
-    # todo
+    def random_int_float_testing(self, tests_to_generate=10000):
+        for i in range(tests_to_generate):
+            # Generate random integers and floats
+            test_num = round(random.uniform(-1000000000, 1000000000), random.randint(0, 50))
+            odds = random.randint(0, 1)
+            if odds == 1:
+                test_num = round(test_num)
 
-    # provided example tests
-    def test_example_1(self):
-        self.assertEqual(conv_num('12345'), 12345)
+            # Generate tests
+            message = 'Test case: {}, Expected: {}, Result: {}'
+            new_test = build_almost_equal_tests(test_num, str(test_num), conv_num, message)
+            setattr(unittest.TestCase, 'test_{}'.format(test_num), new_test)
 
-    def test_example_2(self):
-        self.assertEqual(conv_num('-123.45'), -123.45)
+    def random_hex_testing(self, tests_to_generate=10000):
+        # Generate random hexes
+        for i in range(tests_to_generate):
+            test_int = random.randint(0, 1000000000)
+            test_hex = hex(test_int)
+            odds = random.randint(0, 1)
+            if odds == 1:
+                test_hex = '-' + test_hex
+                test_int *= -1
 
-    def test_example_3(self):
-        self.assertEqual(conv_num('.45'), 0.45)
-
-    def test_example_4(self):
-        self.assertEqual(conv_num('123.'), 123.0)
-
-    def test_example_5(self):
-        self.assertEqual(conv_num('0xAD4'), 2772)
-
-    def test_example_6(self):
-        self.assertIsNone(conv_num('0xAZ4'))
-
-    def test_example_7(self):
-        self.assertIsNone(conv_num('12345A'))
-
-    def test_example_8(self):
-        self.assertIsNone(conv_num('12.3.45'))
-
-    # zeroes at ends tests - leading and trailing
-    def test_zeroes_at_ends_1(self):
-        self.assertEqual(conv_num('0001'), 1)
-
-    def test_zeroes_at_ends_2(self):
-        self.assertEqual(conv_num('0001000'), 1000)
-
-    def test_zeroes_at_ends_3(self):
-        self.assertEqual(conv_num('0.0001'), 0.0001)
-
-    def test_zeroes_at_ends_4(self):
-        self.assertEqual(conv_num('0.0001000'), 0.0001)
-
-    # random testing
-    def test_random_negative_hex(self):
-        test_int = randint(0, 1000000000)
-        rand_hex = '-' + hex(test_int)
-        self.assertEqual(conv_num(rand_hex), test_int * -1)
-
-    def test_random_hex(self):
-        test_int = randint(0, 1000000000)
-        rand_hex = hex(test_int)
-        self.assertEqual(conv_num(rand_hex), test_int)
+            # Generate tests
+            message = 'Test case: {}, Expected: {}, Result: {}'
+            new_test = build_equal_tests(test_int, test_hex, conv_num, message)
+            setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
 
 
 class TestMyDateTime(unittest.TestCase):
@@ -111,4 +140,7 @@ class TestConvEndian(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    TestConvNum.hardcoded_tests(TestConvNum())
+    TestConvNum.random_int_float_testing(TestConvNum())
+    TestConvNum.random_hex_testing(TestConvNum())
     unittest.main()
