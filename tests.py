@@ -84,19 +84,19 @@ class TestMyDateTime(unittest.TestCase):
     def test_example_3(self):
         self.assertEqual(my_datetime(201653971200), '02-29-8360')
     
-    def test_example_3(self):
+    def test_example_4(self):
         self.assertEqual(my_datetime(68256000), '03-01-1972')
         
-    def test_example_3(self):
+    def test_example_5(self):
         self.assertEqual(my_datetime(68256599), '03-01-1972')
         
-    def test_example_3(self):
+    def test_example_6(self):
         self.assertEqual(my_datetime(194400000), '02-29-1976')
         
-    def test_example_3(self):
+    def test_example_7(self):
         self.assertEqual(my_datetime(194486400), '03-01-1976')
     
-    def test_example_3(self):
+    def test_example_8(self):
         self.assertEqual(my_datetime(5555555555), '01-18-2146')
 
 
