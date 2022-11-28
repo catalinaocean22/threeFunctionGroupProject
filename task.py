@@ -230,8 +230,7 @@ def get_my_date(num_sec, days_needed, month_list, days_in_year, year):
     day_in_month = 1
     total_days = month_list[0]  # a sum of number of days we've gone through on our way to reach to the current month
     days = num_sec // sec_day
-    i = 0
-    while i <= len(month_list) - 1:  # going through the months of the given year and handle different cases
+    for i in range(len(month_list)):  # going through the months of the given year and handle different cases
         # This is to handle special cases for the last day of leap years where the year passed here is 1 year too many
         if not is_leap(year) and num_sec - days * sec_day < sec_day and abs(days_needed) == 366:
             year -= 1
