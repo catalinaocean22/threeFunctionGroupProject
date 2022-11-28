@@ -100,6 +100,15 @@ class TestConvNum(unittest.TestCase):
             setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
 
 
+def unix_to_datetime(seconds):
+            return datetime.utcfromtimestamp(seconds)
+
+
+def string_date_formatter(a_date):
+            d = a_date.strftime("%m-%d-%Y")
+            return d
+
+
 class TestMyDateTime(unittest.TestCase):
     # provided example tests
     def test_example_0(self):
@@ -115,17 +124,12 @@ class TestMyDateTime(unittest.TestCase):
         self.assertEqual(my_datetime(201653971200), '02-29-8360')
 
     # random tests from 0 up to the big example
-    def test_random(self):
-        def my_date(seconds):
-            return datetime.utcfromtimestamp(seconds)
-
-        def string_time(a_date):
-            d = a_date.strftime("%m-%d-%Y")
-            return d
-        tests_to_generate = 100000
+    def test_random(self, tests_to_generate=10000):
         for i in range(tests_to_generate):
             sec = random.randint(0, 253402261199)
-            self.assertEqual(my_datetime(sec), string_time(my_date(sec)))
+            message = 'Test case: {}, Expected: {}, Result: {}'
+            new_test = build_equal_tests(string_date_formatter(unix_to_datetime(sec))), sec,  my_datetime, message)
+            setattr(unittest.TestCase, 'test_{}'.format(sec), new_test)
 
 
 class TestConvEndian(unittest.TestCase):
@@ -157,4 +161,5 @@ if __name__ == '__main__':
     TestConvNum.hardcoded_tests(TestConvNum())
     TestConvNum.random_int_float_testing(TestConvNum())
     TestConvNum.random_hex_testing(TestConvNum())
+    TestMyDateTime.test_random(TestMyDateTime())
     unittest.main()
