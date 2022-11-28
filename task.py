@@ -287,6 +287,7 @@ def is_leap(year):
     """to decide if a year is a leap year"""
     return year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
 
+
 def conv_endian(num, endian='big'):
     # validate
     if endian not in ['big', 'little']:
