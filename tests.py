@@ -101,12 +101,12 @@ class TestConvNum(unittest.TestCase):
 
 
 def unix_to_datetime(seconds):
-            return datetime.utcfromtimestamp(seconds)
+    return datetime.utcfromtimestamp(seconds)
 
 
 def string_date_formatter(a_date):
-            d = a_date.strftime("%m-%d-%Y")
-            return d
+    d = a_date.strftime("%m-%d-%Y")
+    return d
 
 
 class TestMyDateTime(unittest.TestCase):
