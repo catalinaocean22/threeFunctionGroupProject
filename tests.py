@@ -124,7 +124,7 @@ class TestMyDateTime(unittest.TestCase):
             return d
         tests_to_generate = 100000
         for i in range(tests_to_generate):
-            sec = random.randint(0, 201654057600)
+            sec = random.randint(0, 253402261199)
             self.assertEqual(my_datetime(sec), string_time(my_date(sec)))
 
 
