@@ -69,7 +69,7 @@ class TestConvNum(unittest.TestCase):
                 new_test = build_equal_tests(test_dict[key], key, conv_num, message)
             else:
                 new_test = build_almost_equal_tests(test_dict[key], key, conv_num, message)
-            setattr(unittest.TestCase, 'test{}'.format(key), new_test)
+            setattr(TestConvNum, 'test{}'.format(key), new_test)
 
     def random_int_float_testing(self, tests_to_generate=10000):
         for i in range(tests_to_generate):
@@ -82,7 +82,7 @@ class TestConvNum(unittest.TestCase):
             # Generate tests
             message = 'Test case: {}, Expected: {}, Result: {}'
             new_test = build_almost_equal_tests(test_num, str(test_num), conv_num, message)
-            setattr(unittest.TestCase, 'test_{}'.format(test_num), new_test)
+            setattr(TestConvNum, 'test_{}'.format(test_num), new_test)
 
     def random_hex_testing(self, tests_to_generate=10000):
         # Generate random hexes
@@ -97,7 +97,7 @@ class TestConvNum(unittest.TestCase):
             # Generate tests
             message = 'Test case: {}, Expected: {}, Result: {}'
             new_test = build_equal_tests(test_int, test_hex, conv_num, message)
-            setattr(unittest.TestCase, 'test_{}'.format(test_hex), new_test)
+            setattr(TestConvNum, 'test_{}'.format(test_hex), new_test)
 
 
 def unix_to_datetime(seconds):
@@ -129,7 +129,7 @@ class TestMyDateTime(unittest.TestCase):
             sec = random.randint(0, 253402261199)
             message = 'Test case: {}, Expected: {}, Result: {}'
             new_test = build_equal_tests(string_date_formatter(unix_to_datetime(sec)), sec,  my_datetime, message)
-            setattr(unittest.TestCase, 'test_{}'.format(sec), new_test)
+            setattr(TestMyDateTime, 'test_{}'.format(sec), new_test)
 
 
 class TestConvEndian(unittest.TestCase):
