@@ -249,7 +249,7 @@ def get_my_date(num_sec, days_needed, month_list, days_in_year, year):
         elif 0 < days_needed % days_in_year < total_days:
             day_in_month = days_needed % days_in_year + 1
             break
-        elif days_needed % days_in_year == total_days and num_sec >= days * sec_day: # the first day of a month
+        elif days_needed % days_in_year == total_days and num_sec >= days * sec_day:  # the first day of a month
             day_in_month = 1
             month += 1
             break
