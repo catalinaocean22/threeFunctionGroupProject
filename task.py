@@ -201,19 +201,19 @@ def my_datetime(num_sec):
         if remain_days >= 0:  # to handle cases where the actual year should be the next year
             year += 1
         # using helper function get_my_date we can get the month, day, and year as integers.
-        if is_leap(year):  # if it's a leap year
+        if is_leap(year):
             month = get_my_date(num_sec, remain_days, LEAP_DAYS_IN_MONTH, DAYS_LEAP, year)[0]
             day_in_month = get_my_date(num_sec, remain_days, LEAP_DAYS_IN_MONTH, DAYS_LEAP, year)[1]
-        if not is_leap(year):  # if it's a regular year
+        else:
             result = get_my_date(num_sec, remain_days, REG_DAYS_IN_MONTH, DAYS_REG, year)
             month = result[0]
             day_in_month = result[1]
             year = result[2]
     # This part we turn the integer results to strings before returning them.
     if month < 10:
-        month = str(0) + str(month)
+        month = '0' + str(month)
     if day_in_month < 10:
-        day_in_month = str(0) + str(day_in_month)
+        day_in_month = '0' + str(day_in_month)
     return str(month) + "-" + str(day_in_month) + "-" + str(year)
 
 
@@ -249,10 +249,9 @@ def get_my_date(num_sec, days_needed, month_list, days_in_year, year):
         elif 0 < days_needed % days_in_year < total_days:
             day_in_month = days_needed % days_in_year + 1
             break
-        elif days_needed % days_in_year == total_days:  # the first day of a month
-            if num_sec >= days * sec_day:
-                day_in_month = 1
-                month += 1
+        elif days_needed % days_in_year == total_days and num_sec >= days * sec_day: # the first day of a month
+            day_in_month = 1
+            month += 1
             break
         elif days_needed == days_in_year:  # the first day of the year
             day_in_month = 1
