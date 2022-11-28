@@ -128,7 +128,7 @@ class TestMyDateTime(unittest.TestCase):
         for i in range(tests_to_generate):
             sec = random.randint(0, 253402261199)
             message = 'Test case: {}, Expected: {}, Result: {}'
-            new_test = build_equal_tests(string_date_formatter(unix_to_datetime(sec))), sec,  my_datetime, message)
+            new_test = build_equal_tests(string_date_formatter(unix_to_datetime(sec)), sec,  my_datetime, message)
             setattr(unittest.TestCase, 'test_{}'.format(sec), new_test)
 
 
